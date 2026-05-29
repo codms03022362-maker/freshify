@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freshify — Real Fruit. Real Flavour.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --page-bg: #0d0a1e;
+  --shop-bg: #100c24;
+  --footer-bg: #080613;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--page-bg);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ─── FIXED GRADIENT LAYERS ─── */
+#bg-a, #bg-b {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  transition: opacity 0.85s ease;
+  pointer-events: none;
+}
+#bg-a { background: radial-gradient(ellipse at 50% 50%, #7078A6 0%, #2E2951 100%); opacity: 1; }
+#bg-b { background: radial-gradient(ellipse at 50% 50%, #7078A6 0%, #2E2951 100%); opacity: 0; }
+
+/* ─── NAVBAR ─── */
+nav.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 48px;
+  pointer-events: none;
+}
+nav.site-nav > * { pointer-events: auto; }
+
+.nav-logo {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 100px;
+  padding: 6px;
+}
+.nav-pill a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 100px;
+  transition: all 0.25s ease;
+}
+.nav-pill a:hover { color: #fff; }
+.nav-pill a.active {
+  background: #fff;
+  color: #0d0a1e;
+}
+
+.nav-user {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.nav-user svg { width: 18px; height: 18px; fill: rgba(255,255,255,0.8); }
+
+/* ─── HERO ─── */
+.hero {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.slider {
+  position: relative;
+  width: 100%; height: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.slide.active { pointer-events: auto; }
+
+/* Giant title */
+.slide-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 15.5vw, 230px);
+  color: #fff;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  user-select: none;
+  z-index: 2;
+}
+
+/* Bowl */
+.bowl-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-54%);
+  z-index: 3;
+}
+.bowl-wrap img {
+  width: clamp(280px, 37vw, 550px);
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.55));
+  display: block;
+}
+
+/* Ingredients */
+.ingredient {
+  position: absolute;
+  z-index: 4;
+}
+.ingredient img { display: block; }
+.ing-1 { top: 11%; left: 7%; }
+.ing-1 img { width: clamp(90px, 10vw, 148px); }
+.ing-2 { top: 8%; right: 8%; }
+.ing-2 img { width: clamp(80px, 9vw, 130px); }
+.ing-3 { bottom: 20%; right: 22%; }
+.ing-3 img { width: clamp(65px, 7vw, 105px); }
+
+/* Content block bottom-left */
+.slide-content {
+  position: absolute;
+  bottom: 62px; left: 60px;
+  z-index: 5;
+}
+.slide-name {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+.slide-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  max-width: 280px;
+  line-height: 1.55;
+}
+
+/* Slide nav bottom-right */
+.slide-nav {
+  position: absolute;
+  bottom: 58px; right: 58px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.slide-counter {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.05em;
+}
+.arrow-btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  color: #fff;
+}
+.arrow-btn:hover {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.35);
+}
+.arrow-btn svg { width: 16px; height: 16px; }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.scroll-hint span { animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* ─── ANIMATION SYSTEM ─── */
+.anim {
+  opacity: 0;
+  transition: transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.55s ease;
+}
+.ingredient.anim {
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
+}
+
+.ing-1 { transform: rotate(-20deg); }
+.ing-2 { transform: rotate(15deg); }
+.ing-3 { transform: rotate(-12deg); }
+
+/* ACTIVE */
+.slide.active .title-anim   { opacity: 1; transform: translateX(0); }
+.slide.active .bowl-anim    { opacity: 1; transform: translateX(0) rotate(0deg); }
+.slide.active .content-anim { opacity: 1; transform: translateX(0); }
+.slide.active .ing-1 { opacity: 1; transform: rotate(-20deg) translateY(0); }
+.slide.active .ing-2 { opacity: 1; transform: rotate(15deg)  translateY(0); }
+.slide.active .ing-3 { opacity: 1; transform: rotate(-12deg) translateY(0); }
+.slide.active .title-anim   { transition-delay: 0s; }
+.slide.active .content-anim { transition-delay: 0.04s; }
+.slide.active .bowl-anim    { transition-delay: 0.07s; }
+.slide.active .ing-1        { transition-delay: 0.3s; }
+.slide.active .ing-2        { transition-delay: 0.38s; }
+.slide.active .ing-3        { transition-delay: 0.46s; }
+
+/* ENTER RIGHT */
+.slide.enter-right .title-anim   { opacity: 0; transform: translateX(65vw); }
+.slide.enter-right .bowl-anim    { opacity: 0; transform: translateX(72vw) rotate(35deg); }
+.slide.enter-right .content-anim { opacity: 0; transform: translateX(55vw); }
+.slide.enter-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-90vh); }
+.slide.enter-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-90vh); }
+.slide.enter-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-90vh); }
+
+/* ENTER LEFT */
+.slide.enter-left .title-anim   { opacity: 0; transform: translateX(-65vw); }
+.slide.enter-left .bowl-anim    { opacity: 0; transform: translateX(-72vw) rotate(-35deg); }
+.slide.enter-left .content-anim { opacity: 0; transform: translateX(-55vw); }
+.slide.enter-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-90vh); }
+.slide.enter-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-90vh); }
+.slide.enter-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-90vh); }
+
+/* EXIT LEFT */
+.slide.exit-left .title-anim,
+.slide.exit-left .bowl-anim,
+.slide.exit-left .content-anim {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 1, 1), opacity 0.4s ease-in;
+}
+.slide.exit-left .ingredient.anim {
+  transition: transform 0.42s cubic-bezier(0.4, 0, 1, 1), opacity 0.32s ease-in;
+}
+.slide.exit-left .title-anim   { opacity: 0; transform: translateX(-55vw); }
+.slide.exit-left .bowl-anim    { opacity: 0; transform: translateX(-60vw) rotate(-30deg); }
+.slide.exit-left .content-anim { opacity: 0; transform: translateX(-45vw); }
+.slide.exit-left .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-110vh); }
+.slide.exit-left .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-110vh); }
+.slide.exit-left .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-110vh); }
+
+/* EXIT RIGHT */
+.slide.exit-right .title-anim,
+.slide.exit-right .bowl-anim,
+.slide.exit-right .content-anim {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 1, 1), opacity 0.4s ease-in;
+}
+.slide.exit-right .ingredient.anim {
+  transition: transform 0.42s cubic-bezier(0.4, 0, 1, 1), opacity 0.32s ease-in;
+}
+.slide.exit-right .title-anim   { opacity: 0; transform: translateX(55vw); }
+.slide.exit-right .bowl-anim    { opacity: 0; transform: translateX(60vw) rotate(30deg); }
+.slide.exit-right .content-anim { opacity: 0; transform: translateX(45vw); }
+.slide.exit-right .ing-1 { opacity: 0; transform: rotate(-20deg) translateY(-110vh); }
+.slide.exit-right .ing-2 { opacity: 0; transform: rotate(15deg)  translateY(-110vh); }
+.slide.exit-right .ing-3 { opacity: 0; transform: rotate(-12deg) translateY(-110vh); }
+
+/* ─── ABOUT ─── */
+.about {
+  position: relative;
+  z-index: 2;
+  background: var(--page-bg);
+  padding: 130px 48px;
+  text-align: center;
+}
+.about-inner { max-width: 680px; margin: 0 auto; }
+
+.crafted-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.7);
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.crafted-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #a78fff;
+}
+
+.about-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 7vw, 96px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin-bottom: 28px;
+}
+
+.about-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin-bottom: 56px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 40px 0;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.stat + .stat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 10%; bottom: 10%;
+  width: 1px;
+  background: rgba(255,255,255,0.1);
+}
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(44px, 5vw, 68px);
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+}
+
+/* ─── SHOP ─── */
+.menu {
+  position: relative;
+  z-index: 2;
+  background: var(--shop-bg);
+  padding: 120px 48px;
+}
+
+.shop-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 24px;
+}
+.shop-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(52px, 6.5vw, 90px);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+}
+.shop-sub {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  max-width: 280px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.card {
+  border-radius: 22px;
+  min-height: 390px;
+  overflow: hidden;
+  padding: 22px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+.card:hover { transform: translateY(-12px); }
+.card:hover .card-bowl { transform: scale(1.08); }
+
+.card-blueberry  { background: radial-gradient(ellipse at 50% 110%, #7078A6 0%, #1c1840 100%); }
+.card-strawberry { background: radial-gradient(ellipse at 50% 110%, #C94040 0%, #420c0c 100%); }
+.card-chocolate  { background: radial-gradient(ellipse at 50% 110%, #B07C40 0%, #2e1907 100%); }
+.card-blackberry { background: radial-gradient(ellipse at 50% 110%, #8A3878 0%, #250730 100%); }
+
+.card-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.38);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.card-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.card-flavour {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+}
+
+.card-bowl-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+}
+.card-bowl {
+  width: 88%;
+  filter: drop-shadow(0 16px 32px rgba(0,0,0,0.45));
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.card-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.03em;
+}
+.order-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.order-btn:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative;
+  z-index: 2;
+  background: var(--footer-bg);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 56px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer-brand {}
+.footer-logo {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.footer-tagline {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.38);
+}
+
+.footer-links {
+  display: flex;
+  gap: 32px;
+}
+.footer-links a {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: #fff; }
+
+.footer-copy {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.reveal-d4 { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- Fixed gradient background layers -->
+<div id="bg-a"></div>
+<div id="bg-b"></div>
+
+<!-- Navbar -->
+<nav class="site-nav">
+  <a href="#" class="nav-logo">Freshify</a>
+  <div class="nav-pill">
+    <a href="#" class="active" data-section="hero">Home</a>
+    <a href="#about" data-section="about">About</a>
+    <a href="#shop" data-section="shop">Shop</a>
+    <a href="#contact" data-section="contact">Contact</a>
+  </div>
+  <div class="nav-user">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+    </svg>
+  </div>
+</nav>
+
+<!-- Hero Slider -->
+<section class="hero" id="hero">
+  <div class="slider">
+
+    <!-- Slide 1: Blueberry -->
+    <div class="slide active" data-index="0">
+      <div class="ingredient ing-1 anim">
+        <img src="Blueberry-1.png" alt="">
+      </div>
+      <div class="ingredient ing-2 anim">
+        <img src="Blueberry-2.png" alt="">
+      </div>
+      <div class="slide-title title-anim anim">BLUEBERRY</div>
+      <div class="bowl-wrap bowl-anim anim">
+        <img src="Blueberry-bowl.png" alt="Blueberry Bowl">
+      </div>
+      <div class="ingredient ing-3 anim">
+        <img src="Blueberry-3.png" alt="">
+      </div>
+      <div class="slide-content content-anim anim">
+        <div class="slide-name">Berry Pure</div>
+        <div class="slide-desc">Fresh blueberries blended with almond milk, topped with chia seeds and toasted coconut flakes.</div>
+      </div>
+    </div>
+
+    <!-- Slide 2: Strawberry -->
+    <div class="slide" data-index="1">
+      <div class="ingredient ing-1 anim">
+        <img src="Strawberry-1.png" alt="">
+      </div>
+      <div class="ingredient ing-2 anim">
+        <img src="Strawberry-2.png" alt="">
+      </div>
+      <div class="slide-title title-anim anim">STRAWBERRY</div>
+      <div class="bowl-wrap bowl-anim anim">
+        <img src="Strawberry-bowl.png" alt="Strawberry Bowl">
+      </div>
+      <div class="ingredient ing-3 anim">
+        <img src="Strawberry-3.png" alt="">
+      </div>
+      <div class="slide-content content-anim anim">
+        <div class="slide-name">Pink Bliss</div>
+        <div class="slide-desc">Sun-ripened strawberries with banana, shredded coconut and a drizzle of raw honey.</div>
+      </div>
+    </div>
+
+    <!-- Slide 3: Chocolate -->
+    <div class="slide" data-index="2">
+      <div class="ingredient ing-1 anim">
+        <img src="Chocolate-1.png" alt="">
+      </div>
+      <div class="ingredient ing-2 anim">
+        <img src="Chocolate-2.png" alt="">
+      </div>
+      <div class="slide-title title-anim anim">CHOCOLATE</div>
+      <div class="bowl-wrap bowl-anim anim">
+        <img src="Chocolate-bowl.png" alt="Chocolate Bowl">
+      </div>
+      <div class="ingredient ing-3 anim">
+        <img src="Chocolate-3.png" alt="">
+      </div>
+      <div class="slide-content content-anim anim">
+        <div class="slide-name">Cocoa Crush</div>
+        <div class="slide-desc">Rich cacao smoothie base topped with sliced banana, roasted almonds and coconut flakes.</div>
+      </div>
+    </div>
+
+    <!-- Slide 4: Blackberry -->
+    <div class="slide" data-index="3">
+      <div class="ingredient ing-1 anim">
+        <img src="Blackberry-1.png" alt="">
+      </div>
+      <div class="ingredient ing-2 anim">
+        <img src="Blackberry-2.png" alt="">
+      </div>
+      <div class="slide-title title-anim anim">BLACKBERRY</div>
+      <div class="bowl-wrap bowl-anim anim">
+        <img src="Blackberry-bowl.png" alt="Blackberry Bowl">
+      </div>
+      <div class="ingredient ing-3 anim">
+        <img src="Blackberry-3.png" alt="">
+      </div>
+      <div class="slide-content content-anim anim">
+        <div class="slide-name">Dark Berry</div>
+        <div class="slide-desc">Wild blackberries with coconut cream, pine nuts, chia seeds and toasted almond slivers.</div>
+      </div>
+    </div>
+
+  </div><!-- .slider -->
+
+  <!-- Slide nav -->
+  <div class="slide-nav">
+    <span class="slide-counter">01 / 04</span>
+    <button class="arrow-btn" id="btn-prev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <button class="arrow-btn" id="btn-next" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Scroll hint -->
+  <a href="#about" class="scroll-hint">
+    Discover
+    <span>↓</span>
+  </a>
+
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="crafted-pill reveal">CRAFTED WITH CARE</div>
+    <h2 class="about-headline reveal reveal-d1">REAL FRUIT.<br>REAL FLAVOUR.</h2>
+    <p class="about-sub reveal reveal-d2">Every bowl is built from scratch with premium whole ingredients. No fillers, no shortcuts — just pure smoothie goodness in every spoonful.</p>
+    <div class="stats">
+      <div class="stat reveal reveal-d2">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Natural</span>
+      </div>
+      <div class="stat reveal reveal-d3">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Flavours</span>
+      </div>
+      <div class="stat reveal reveal-d4">
+        <span class="stat-num">0</span>
+        <span class="stat-label">Fillers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Shop -->
+<section class="menu" id="shop">
+  <div class="shop-header">
+    <h2 class="shop-title reveal">THE<br>BOWLS</h2>
+    <p class="shop-sub reveal reveal-d1">Pick your flavour. Every bowl is handcrafted fresh to order.</p>
+  </div>
+  <div class="cards">
+
+    <div class="card card-blueberry reveal">
+      <div class="card-label">Smoothie Bowl</div>
+      <div class="card-name">Berry Pure</div>
+      <div class="card-flavour">Blueberry</div>
+      <div class="card-bowl-wrap">
+        <img class="card-bowl" src="Blueberry-bowl.png" alt="Berry Pure">
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$14</span>
+        <button class="order-btn">Order Now</button>
+      </div>
+    </div>
+
+    <div class="card card-strawberry reveal reveal-d1">
+      <div class="card-label">Smoothie Bowl</div>
+      <div class="card-name">Pink Bliss</div>
+      <div class="card-flavour">Strawberry</div>
+      <div class="card-bowl-wrap">
+        <img class="card-bowl" src="Strawberry-bowl.png" alt="Pink Bliss">
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$15</span>
+        <button class="order-btn">Order Now</button>
+      </div>
+    </div>
+
+    <div class="card card-chocolate reveal reveal-d2">
+      <div class="card-label">Smoothie Bowl</div>
+      <div class="card-name">Cocoa Crush</div>
+      <div class="card-flavour">Chocolate</div>
+      <div class="card-bowl-wrap">
+        <img class="card-bowl" src="Chocolate-bowl.png" alt="Cocoa Crush">
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$13</span>
+        <button class="order-btn">Order Now</button>
+      </div>
+    </div>
+
+    <div class="card card-blackberry reveal reveal-d3">
+      <div class="card-label">Smoothie Bowl</div>
+      <div class="card-name">Dark Berry</div>
+      <div class="card-flavour">Blackberry</div>
+      <div class="card-bowl-wrap">
+        <img class="card-bowl" src="Blackberry-bowl.png" alt="Dark Berry">
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$16</span>
+        <button class="order-btn">Order Now</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer id="contact">
+  <div class="footer-brand">
+    <div class="footer-logo">Freshify</div>
+    <div class="footer-tagline">Made with love and real blueberries.</div>
+  </div>
+  <div class="footer-links">
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="#shop">Shop</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Freshify. All rights reserved.</div>
+</footer>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.querySelector('.slide-counter');
+  const bgA = document.getElementById('bg-a');
+  const bgB = document.getElementById('bg-b');
+  const navLinks = document.querySelectorAll('.nav-pill a');
+
+  let current = 0;
+  let animating = false;
+  let activeBg = 'a';
+
+  const backgrounds = [
+    'radial-gradient(ellipse at 50% 50%, #7078A6 0%, #2E2951 100%)',
+    'radial-gradient(ellipse at 50% 50%, #C94040 0%, #6B1515 100%)',
+    'radial-gradient(ellipse at 50% 50%, #B07C40 0%, #4A2A10 100%)',
+    'radial-gradient(ellipse at 50% 50%, #8A3878 0%, #3A0F50 100%)',
+  ];
+
+  function setBackground(index) {
+    const grad = backgrounds[index];
+    if (activeBg === 'a') {
+      bgB.style.background = grad;
+      bgB.style.opacity = '1';
+      bgA.style.opacity = '0';
+      activeBg = 'b';
+    } else {
+      bgA.style.background = grad;
+      bgA.style.opacity = '1';
+      bgB.style.opacity = '0';
+      activeBg = 'a';
+    }
+  }
+
+  function updateCounter(index) {
+    const n = String(index + 1).padStart(2, '0');
+    counter.textContent = n + ' / 04';
+  }
+
+  function goTo(next, direction) {
+    if (animating || next === current) return;
+    animating = true;
+
+    const currSlide = slides[current];
+    const nextSlide = slides[next];
+    const enterClass = direction === 'next' ? 'enter-right' : 'enter-left';
+    const exitClass  = direction === 'next' ? 'exit-left'  : 'exit-right';
+
+    const anims = nextSlide.querySelectorAll('.anim');
+    anims.forEach(el => el.style.transition = 'none');
+    nextSlide.classList.remove('active', 'exit-left', 'exit-right');
+    nextSlide.classList.add(enterClass);
+
+    void nextSlide.offsetHeight;
+
+    requestAnimationFrame(() => {
+      anims.forEach(el => el.style.transition = '');
+      currSlide.classList.remove('active');
+      currSlide.classList.add(exitClass);
+      nextSlide.classList.remove(enterClass);
+      nextSlide.classList.add('active');
+      setBackground(next);
+      updateCounter(next);
+      current = next;
+      setTimeout(() => {
+        currSlide.classList.remove(exitClass);
+        animating = false;
+      }, 850);
+    });
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => {
+    goTo((current + 1) % slides.length, 'next');
+  });
+  document.getElementById('btn-prev').addEventListener('click', () => {
+    goTo((current - 1 + slides.length) % slides.length, 'prev');
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo((current + 1) % slides.length, 'next');
+    if (e.key === 'ArrowLeft')  goTo((current - 1 + slides.length) % slides.length, 'prev');
+  });
+
+  // Init first slide bg
+  bgA.style.background = backgrounds[0];
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // Scroll spy nav
+  const sections = {
+    hero:    document.getElementById('hero'),
+    about:   document.getElementById('about'),
+    shop:    document.getElementById('shop'),
+    contact: document.getElementById('contact'),
+  };
+
+  function updateNav() {
+    const y = window.scrollY + 80;
+    const atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 4;
+    let active = 'hero';
+    if (atBottom || y >= sections.contact.offsetTop) active = 'contact';
+    else if (y >= sections.shop.offsetTop) active = 'shop';
+    else if (y >= sections.about.offsetTop) active = 'about';
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.dataset.section === active);
+    });
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+
+  // Set active immediately on click without waiting for scroll event
+  navLinks.forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('active'));
+      a.classList.add('active');
+    });
+  });
+})();
+</script>
+</body>
+</html>
